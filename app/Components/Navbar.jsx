@@ -27,7 +27,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-4 inset-x-0 z-50 bg-slate-950/70 backdrop-blur-lg rounded-full shadow-lg">
+    <nav className="fixed top-4 inset-x-0 z-50 rounded-full">
       <div className="mx-auto max-w-5xl">
         <div className="relative p-[1.5px] rounded-full bg-gradient-to-r from-indigo-400/80 via-violet-500/80 to-rose-500/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)]">
           <div className="flex items-center justify-between rounded-full bg-slate-900/70 backdrop-blur-xl px-4 sm:px-6 py-2.5 ring-1 ring-white/10">
