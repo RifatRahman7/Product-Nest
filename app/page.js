@@ -1,7 +1,9 @@
+import HeroSlider from "./Components/HeroSlider";
+
 export default function Home() {
   return (
-    <main>
-      <div>Hello world</div>
+    <main className="mt-5">
+      <HeroSlider />
     </main>
   );
 }
