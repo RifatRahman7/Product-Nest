@@ -6,7 +6,6 @@ import { Typewriter } from "react-simple-typewriter";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 
-// Your JSON data for banners
 const slides = [
   {
     title: "Discover Amazing Products",

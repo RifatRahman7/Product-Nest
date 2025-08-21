@@ -34,7 +34,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 relative overflow-hidden">
+    <div className="mt-15 mb-15 flex items-center justify-center bg-slate-950 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 z-0 flex items-center justify-center">
         <div className="w-[500px] h-[500px] bg-gradient-to-tr from-indigo-500 via-fuchsia-500 to-pink-500 opacity-30 blur-3xl rounded-full"></div>

@@ -2,8 +2,8 @@
 export default function Footer() {
   return (
     <footer className="max-w-full">
-      <div className="mx-auto max-w-full">
-        <div className="rounded-2xl bg-slate-950 backdrop-blur-xl shadow-2xl border-t-4 border-gradient-to-r from-indigo-400 via-violet-500 to-rose-500 p-8">
+      <div>
+        <div className="rounded-2xl bg-slate-950 backdrop-blur-xl shadow-2xl border-t-3 border-gradient-to-r from-indigo-400 via-violet-500 to-rose-500 p-8">
           <div className="flex flex-col px-5 lg:px-20 md:flex-row md:items-center md:justify-between gap-6">
             {/* Brand & Description */}
             <div>
