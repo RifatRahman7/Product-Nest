@@ -1,3 +1,4 @@
+// app/dashboard/page.js
 export default function DashboardHome() {
   return (
     <div className="rounded-3xl bg-white/10 backdrop-blur-2xl shadow-2xl border border-white/20 p-10 mt-8 flex flex-col items-center">

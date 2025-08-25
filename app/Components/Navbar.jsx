@@ -1,3 +1,4 @@
+// app/Components/Navbar.jsx
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -7,16 +8,21 @@ import {
   Squares2X2Icon,
   RectangleStackIcon,
   ArrowRightOnRectangleIcon,
+  ArrowLeftOnRectangleIcon,
   UserPlusIcon,
   Bars3Icon,
   XMarkIcon,
 } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSession, signOut } from 'next-auth/react';
 
-const navLinks = [
+const baseLinks = [
   { href: '/', label: 'Home', icon: <HomeIcon className="w-5 h-5 mr-2" /> },
-  { href: '/allProducts', label: 'All Products', icon: <Squares2X2Icon className="w-5 h-5 mr-2" /> },
+  { href: '/products', label: 'Products', icon: <Squares2X2Icon className="w-5 h-5 mr-2" /> },
   { href: '/dashboard', label: 'Dashboard', icon: <RectangleStackIcon className="w-5 h-5 mr-2" /> },
+];
+
+const authLinks = [
   { href: '/login', label: 'Login', icon: <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" /> },
   { href: '/register', label: 'Register', icon: <UserPlusIcon className="w-5 h-5 mr-2" /> },
 ];
@@ -24,6 +30,10 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const isAuthed = status === 'authenticated';
+
+  const linksToShow = isAuthed ? baseLinks : [...baseLinks, ...authLinks];
 
   return (
     <nav className="fixed top-4 inset-x-0 z-50 rounded-full">
@@ -45,7 +55,7 @@ export default function Navbar() {
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 ring-1 ring-white/10">
-              {navLinks.map((item) => (
+              {linksToShow.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -66,6 +76,16 @@ export default function Navbar() {
                   <span className="pointer-events-none absolute left-0 right-0 bottom-0 h-[2px] bg-gradient-to-r from-indigo-400 via-violet-500 to-rose-400 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
                 </Link>
               ))}
+
+              {isAuthed && (
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="relative group px-3 py-1.5 text-sm font-medium flex items-center bg-transparent border-none outline-none cursor-pointer text-slate-200 hover:text-white"
+                >
+                  <ArrowLeftOnRectangleIcon className="w-5 h-5 mr-2" />
+                  <span className="relative z-10">Logout</span>
+                </button>
+              )}
             </div>
 
             {/* Hamburger */}
@@ -92,7 +112,7 @@ export default function Navbar() {
                 <div className="p-[1.5px] rounded-2xl bg-gradient-to-r from-indigo-400/80 via-violet-500/80 to-rose-500/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)]">
                   <div className="rounded-2xl bg-slate-900/70 backdrop-blur-2xl ring-1 ring-white/10 p-6">
                     <div className="space-y-2 text-center">
-                      {navLinks.map((item) => (
+                      {linksToShow.map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
@@ -113,6 +133,19 @@ export default function Navbar() {
                           {item.label}
                         </Link>
                       ))}
+
+                      {isAuthed && (
+                        <button
+                          onClick={() => {
+                            setMenuOpen(false);
+                            signOut({ callbackUrl: '/' });
+                          }}
+                          className="w-full rounded-xl px-4 py-3 text-base font-medium flex items-center justify-center text-slate-100 hover:text-white bg-transparent border-none outline-none cursor-pointer"
+                        >
+                          <ArrowLeftOnRectangleIcon className="w-5 h-5 mr-2" />
+                          Logout
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

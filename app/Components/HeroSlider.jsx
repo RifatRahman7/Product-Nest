@@ -1,3 +1,4 @@
+// app/Components/heroSlider.jsx
 'use client';
 
 import { Swiper, SwiperSlide } from "swiper/react";

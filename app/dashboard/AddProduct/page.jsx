@@ -1,20 +1,43 @@
+// app/dashboard/AddProduct/page.jsx
 'use client';
 
 import { useState } from 'react';
-import { PlusCircleIcon, CameraIcon } from '@heroicons/react/24/solid';
+import { useRouter } from 'next/navigation';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
 
 export default function AddProductPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [photo, setPhoto] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(null);
+  const [error, setError] = useState('');
 
-  function handlePhotoChange(e) {
-    const file = e.target.files[0];
-    setPhoto(file);
-    if (file) {
-      setPhotoPreview(URL.createObjectURL(file));
-    } else {
-      setPhotoPreview(null);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    const form = e.target;
+    const name = form.name.value;
+    const description = form.description.value;
+    const price = form.price.value;
+    const imageUrl = form.imageUrl.value;
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, price, image: imageUrl || null }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || 'Failed to create product');
+      }
+
+      router.push('/products');
+    } catch (err) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -24,42 +47,39 @@ export default function AddProductPage() {
         <PlusCircleIcon className="w-7 h-7 sm:w-8 sm:h-8 text-pink-400" />
         Add New Product
       </h2>
-      <form className="w-full max-w-xs sm:max-w-sm md:max-w-md flex flex-col gap-5">
-        {/* Photo Upload */}
-        <div className="flex flex-col items-center gap-2">
-          <label className="relative cursor-pointer group">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handlePhotoChange}
-            />
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 border-2 border-fuchsia-400 flex items-center justify-center shadow-inner overflow-hidden group-hover:ring-2 group-hover:ring-fuchsia-400 transition">
-              {photoPreview ? (
-                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <CameraIcon className="w-8 h-8 sm:w-10 sm:h-10 text-fuchsia-400" />
-              )}
-            </div>
-            <span className="block mt-2 text-slate-300 text-xs sm:text-sm text-center">Add product photo</span>
-          </label>
-        </div>
+
+      <form onSubmit={handleSubmit} className="w-full max-w-xs sm:max-w-sm md:max-w-md flex flex-col gap-5">
+        <input
+          type="url"
+          name="imageUrl"
+          placeholder="Image URL (optional)"
+          className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner text-base sm:text-lg"
+        />
+
         <input
           type="text"
+          name="name"
           placeholder="Product Name"
+          required
           className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner text-base sm:text-lg"
         />
         <textarea
+          name="description"
           placeholder="Description"
           className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner text-base sm:text-lg"
         />
         <input
           type="number"
+          name="price"
           placeholder="Price"
           min="0"
           step="0.01"
+          required
           className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner text-base sm:text-lg"
         />
+
+        {error && <div className="text-center text-red-400 font-semibold">{error}</div>}
+
         <button
           type="submit"
           disabled={loading}

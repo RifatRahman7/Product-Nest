@@ -1,3 +1,4 @@
+// app/dashboard/layout.jsx
 'use client';
 
 import { useState } from 'react';
