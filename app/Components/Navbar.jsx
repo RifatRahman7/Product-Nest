@@ -82,6 +82,13 @@ export default function Navbar() {
                   onClick={() => signOut({ callbackUrl: '/' })}
                   className="relative group px-3 py-1.5 text-sm font-medium flex items-center bg-transparent border-none outline-none cursor-pointer text-slate-200 hover:text-white"
                 >
+                  {session?.user?.image && (
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name || 'Profile'}
+                      className="w-6 h-6 rounded-full object-cover ring-1 ring-white/20 mr-2"
+                    />
+                  )}
                   <ArrowLeftOnRectangleIcon className="w-5 h-5 mr-2" />
                   <span className="relative z-10">Logout</span>
                 </button>
@@ -142,6 +149,13 @@ export default function Navbar() {
                           }}
                           className="w-full rounded-xl px-4 py-3 text-base font-medium flex items-center justify-center text-slate-100 hover:text-white bg-transparent border-none outline-none cursor-pointer"
                         >
+                          {session?.user?.image && (
+                            <img
+                              src={session.user.image}
+                              alt={session.user.name || 'Profile'}
+                              className="w-6 h-6 rounded-full object-cover ring-1 ring-white/20 mr-2"
+                            />
+                          )}
                           <ArrowLeftOnRectangleIcon className="w-5 h-5 mr-2" />
                           Logout
                         </button>

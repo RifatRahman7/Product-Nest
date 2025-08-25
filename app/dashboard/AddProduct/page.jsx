@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import Swal from 'sweetalert2';
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -32,6 +33,17 @@ export default function AddProductPage() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.message || 'Failed to create product');
       }
+
+      // SweetAlert2 success message, then redirect
+      await Swal.fire({
+        title: 'Product added!',
+        text: 'Your product has been created successfully.',
+        icon: 'success',
+        confirmButtonText: 'Go to products',
+        confirmButtonColor: '#8b5cf6', // Tailwind violet-500
+        background: '#0f172a', // slate-900
+        color: '#e2e8f0', // slate-200
+      });
 
       router.push('/products');
     } catch (err) {

@@ -2,26 +2,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRightIcon, CameraIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
-  const [photo, setPhoto] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(null);
   const [error, setError] = useState('');
   const router = useRouter();
-
-  function handlePhotoChange(e) {
-    const file = e.target.files[0];
-    setPhoto(file);
-    if (file) {
-      setPhotoPreview(URL.createObjectURL(file));
-    } else {
-      setPhotoPreview(null);
-    }
-  }
 
   async function handleRegister(e) {
     e.preventDefault();
@@ -32,7 +20,10 @@ export default function RegisterPage() {
     formData.append('name', form.name.value);
     formData.append('email', form.email.value);
     formData.append('password', form.password.value);
-    if (photo) formData.append('photo', photo);
+
+    // Add photo URL (optional)
+    const imageUrl = form.imageUrl.value?.trim();
+    if (imageUrl) formData.append('image', imageUrl); // send as 'image' string
 
     try {
       const res = await fetch('/api/auth/register', {
@@ -67,26 +58,16 @@ export default function RegisterPage() {
         encType="multipart/form-data"
       >
         <h2 className="text-3xl font-extrabold text-white text-center drop-shadow-lg">Create Your Account</h2>
-        {/* Photo Upload */}
-        <div className="flex flex-col items-center gap-2">
-          <label className="relative cursor-pointer group">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handlePhotoChange}
-            />
-            <div className="w-20 h-20 rounded-full bg-white/20 border-2 border-fuchsia-400 flex items-center justify-center shadow-inner overflow-hidden group-hover:ring-2 group-hover:ring-fuchsia-400 transition">
-              {photoPreview ? (
-                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <CameraIcon className="w-8 h-8 text-fuchsia-400" />
-              )}
-            </div>
-            <span className="block mt-2 text-slate-300 text-sm text-center">Add your photo</span>
-          </label>
-        </div>
+
         <div className="flex flex-col gap-4">
+          <h2 className='text-xl text-slate-300 px-1 font-sans'>Enter your photo URL (optional):</h2>
+          <input
+            type="url"
+            name="imageUrl"
+            placeholder="https://example.com/avatar.jpg"
+            className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner"
+          />
+
           <h2 className='text-xl text-slate-300 px-1 font-sans'>Enter your name:</h2>
           <input
             type="text"
@@ -95,6 +76,7 @@ export default function RegisterPage() {
             placeholder="Name"
             className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner"
           />
+
           <h2 className='text-xl text-slate-300 px-1 font-sans'>Enter your email:</h2>
           <input
             type="email"
@@ -103,6 +85,7 @@ export default function RegisterPage() {
             placeholder="Email"
             className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner"
           />
+
           <h2 className='text-xl text-slate-300 px-1 font-sans'>Enter your password:</h2>
           <input
             type="password"
@@ -112,9 +95,11 @@ export default function RegisterPage() {
             className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-inner"
           />
         </div>
+
         {error && (
           <div className="text-center text-red-400 font-semibold">{error}</div>
         )}
+
         <button
           type="submit"
           disabled={loading}
@@ -131,6 +116,7 @@ export default function RegisterPage() {
             </>
           )}
         </button>
+
         {/* Google Login */}
         <button
           type="button"
@@ -148,6 +134,7 @@ export default function RegisterPage() {
           </svg>
           Sign up with Google
         </button>
+
         <div className="text-center text-slate-300">
           Already have an account?{' '}
           <a href="/login" className="text-fuchsia-400 hover:underline font-semibold">

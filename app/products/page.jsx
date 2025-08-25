@@ -11,7 +11,7 @@ export default async function ProductsPage() {
     const products = docs.map((p) => ({ ...p, _id: p._id.toString() }));
 
     return (
-        <div className="mt-8 p-4">
+        <div className="mt-8 p-10">
             <h1 className="text-3xl font-extrabold text-center mb-6 
                bg-gradient-to-r from-indigo-500 to-pink-500 
                bg-clip-text text-transparent">
